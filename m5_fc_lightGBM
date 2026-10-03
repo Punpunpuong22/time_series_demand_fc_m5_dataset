@@ -1,0 +1,6 @@
+import kagglehub
+
+# Download latest version
+path = kagglehub.dataset_download("aryayadav0513/m5-forecasting-accuracy")
+
+print("Path to dataset files:", path)
