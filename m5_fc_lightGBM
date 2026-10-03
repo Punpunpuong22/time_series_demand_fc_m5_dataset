@@ -1,6 +1,1 @@
-import kagglehub
-
-# Download latest version
-path = kagglehub.dataset_download("aryayadav0513/m5-forecasting-accuracy")
-
-print("Path to dataset files:", path)
+https://colab.research.google.com/drive/1W-w96ntn_LVhr1E2yu84n53S1DFZ92B4?usp=sharing 
