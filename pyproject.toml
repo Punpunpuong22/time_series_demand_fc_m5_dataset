@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "m5cal"
+version = "0.1.0"
+description = "Calendar-aware daily retail demand forecasting: an information-controlled comparison of LightGBM and LSTM on the M5 data"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+dependencies = [
+  "numpy>=1.23",
+  "pandas>=1.5",
+  "scipy>=1.9",
+  "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+models = ["lightgbm>=3.3", "torch>=2.0"]
+stats = ["statsmodels>=0.13"]
+tune = ["optuna>=3.0"]
+dev = ["pytest>=7", "nbformat>=5"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

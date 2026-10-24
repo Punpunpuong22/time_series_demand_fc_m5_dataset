@@ -1,0 +1,46 @@
+# --- Dữ liệu: KHÔNG đưa dữ liệu M5 lên GitHub (giấy phép Kaggle, dung lượng lớn) ---
+data/raw/
+data/interim/
+data/processed/
+data/synthetic/
+*.csv
+*.csv.gz
+*.parquet
+*.pkl
+*.zip
+
+# --- Kết quả và mô hình lớn ---
+results/preds/
+results/models/
+results/*.csv
+results/*.csv.gz
+checkpoints/
+*.pt
+*.txt.model
+
+# --- Bí mật: tuyệt đối không commit ---
+kaggle.json
+.env
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ipynb_checkpoints/
+build/
+dist/
+
+# --- Hệ điều hành / IDE ---
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Cho phép commit các bảng kết quả nhỏ (để báo cáo)
+!results/tables/
+!results/tables/*.csv
+
+# Giữ lại các thư mục rỗng
+!data/.gitkeep
+!results/.gitkeep

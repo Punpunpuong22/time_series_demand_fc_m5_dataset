@@ -1,0 +1,20 @@
+# Core (bắt buộc) — đủ để chạy dữ liệu, đặc trưng, độ đo, kiểm định, kiểm thử
+numpy>=1.23
+pandas>=1.5
+scipy>=1.9
+pyyaml>=6.0
+
+# Mô hình (Google Colab đã cài sẵn hai thư viện này)
+lightgbm>=3.3
+torch>=2.0
+
+# Phân tích thống kê (mô hình hỗn hợp cho H2b)
+statsmodels>=0.13
+
+# Tinh chỉnh siêu tham số (tùy chọn)
+optuna>=3.0
+
+# Kiểm thử và notebook
+pytest>=7
+nbformat>=5
+matplotlib>=3.5
