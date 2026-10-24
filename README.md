@@ -58,38 +58,6 @@ m5-calendar-forecasting/
 
 Nguyên tắc: **toàn bộ logic nằm trong `src/m5cal/`**, notebook chỉ gọi hàm. Nhờ vậy mã được kiểm thử, dễ đọc lại và cho kết quả giống nhau giữa các lần chạy.
 
-## 3. Chạy nhanh trên Google Colab (khuyến nghị)
-
-1. Đưa repo lên GitHub theo [docs/HUONG_DAN_GIT.md](docs/HUONG_DAN_GIT.md).
-2. Mở `notebooks/01_setup_and_eda.ipynb` trên Colab: vào https://colab.research.google.com → tab **GitHub** → dán đường dẫn repo → chọn notebook.
-3. Ở ô đầu tiên, đổi `GITHUB_USER = "<USERNAME>"` thành tên tài khoản GitHub của bạn.
-4. Runtime → Change runtime type → **T4 GPU**. Chạy lần lượt từng ô.
-5. Sau đó dùng `02_run_experiments.ipynb` để chạy thí nghiệm và `03_results_analysis.ipynb` để phân tích.
-
-Kết quả được lưu trong Google Drive (`MyDrive/M5_project/results`) nên không mất khi Colab ngắt kết nối.
-
-## 4. Chạy trên máy tính
-
-```bash
-git clone https://github.com/<USERNAME>/m5-calendar-forecasting.git
-cd m5-calendar-forecasting
-python -m venv .venv && source .venv/bin/activate      # Windows: .venv\Scripts\activate
-pip install -r requirements.txt
-pip install -e .
-python -m pytest -q                                    # chạy kiểm thử
-```
-
-Máy văn phòng cấu hình thấp chạy được baseline và LightGBM trên tập con nhỏ; LSTM nên chạy trên Colab GPU.
-
-## 5. Dữ liệu
-
-Dữ liệu M5 **không** được đưa lên repo (quy định của Kaggle và dung lượng ~450 MB). Có hai cách:
-
-* **Kaggle API**: đăng nhập Kaggle, đồng ý luật cuộc thi tại https://www.kaggle.com/competitions/m5-forecasting-accuracy/rules, tạo API token (Settings → API → Create New Token) để có `kaggle.json`, đặt vào `~/.kaggle/`, rồi chạy `bash scripts/download_m5.sh`.
-* **Google Drive**: sao chép `calendar.csv`, `sell_prices.csv`, `sales_train_evaluation.csv` vào `MyDrive/M5_project/data_raw/`; notebook sẽ tự nối thư mục này vào `data/raw`.
-
-Không bao giờ commit `kaggle.json` (đã có trong `.gitignore`).
-
 ## 6. Thí nghiệm
 
 ```bash
