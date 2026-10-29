@@ -1,0 +1,24 @@
+# Cấu hình LSTM encoder–decoder toàn cục, đa đầu ra 28 ngày.
+input_len: 112          # số ngày quá khứ đưa vào encoder (L)
+samples_per_epoch: 100000  # số cặp (chuỗi, mốc) lấy ngẫu nhiên mỗi epoch; mốc rơi vào mọi thứ trong tuần
+train_years: 3          # chỉ lấy mốc huấn luyện trong 3 năm gần nhất trước mốc dự báo
+hidden_size: 64
+num_layers: 1
+dropout: 0.1
+emb_dims: {item_id: 16, dept_id: 4, cat_id: 2, store_id: 4, state_id: 2}
+loss: tweedie           # tweedie | mse
+tweedie_rho: 1.5
+batch_size: 512
+max_epochs: 15
+patience: 3             # early stopping trên cửa sổ tinh chỉnh
+lr: 0.001
+grad_clip: 1.0
+device: auto            # auto | cpu | cuda
+
+tuning:
+  n_trials: 30
+  space:
+    hidden_size: [32, 128, int]
+    lr: [0.0003, 0.003, log]
+    dropout: [0.0, 0.3, float]
+    input_len: [56, 112, choice]

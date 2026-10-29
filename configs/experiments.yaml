@@ -1,0 +1,20 @@
+# Ma trận thí nghiệm (Bảng 11 trong báo cáo).
+# feature_set: H = lịch sử + định danh; HC = + lịch, SNAP; HCP = + giá
+# horizon_groups: nhóm tầm dự báo cho LightGBM trực tiếp.
+#   weekly  -> 4 mô hình (1–7, 8–14, 15–21, 22–28), lag tối thiểu 7/14/21/28
+#   lag28   -> 1 mô hình cho cả 28 ngày, lag tối thiểu 28 (thiết lập phổ biến trong M5)
+#   daily   -> 28 mô hình, lag tối thiểu = h (cân bằng thông tin tuyệt đối, tốn thời gian nhất)
+
+B0:    {model: snaive}
+B1:    {model: croston_sba}
+
+L-H:   {model: lgbm, feature_set: H,   horizon_groups: weekly}
+L-HC:  {model: lgbm, feature_set: HC,  horizon_groups: weekly}
+L-HCP: {model: lgbm, feature_set: HCP, horizon_groups: weekly}
+
+S-H:   {model: lstm, feature_set: H}
+S-HC:  {model: lstm, feature_set: HC}
+S-HCP: {model: lstm, feature_set: HCP}
+
+R1:    {model: deepar, feature_set: HCP}            # cần: pip install "gluonts[torch]"
+R2:    {model: lgbm, feature_set: HCP, horizon_groups: lag28}

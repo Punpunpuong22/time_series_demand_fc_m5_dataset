@@ -4,11 +4,15 @@ pandas>=1.5
 scipy>=1.9
 pyyaml>=6.0
 
-# Mô hình (Google Colab đã cài sẵn hai thư viện này)
+# Mô hình (Google Colab đã cài sẵn lightgbm, torch, tensorflow, statsmodels)
 lightgbm>=3.3
 torch>=2.0
+tensorflow>=2.12        # LSTM của notebook chính
+neuralforecast>=1.7     # N-BEATS có biến ngoại sinh (NBEATSx); notebook tự cài nếu thiếu
+joblib>=1.2             # chạy ARIMA song song
+pyarrow>=12             # lưu dự báo dạng parquet
 
-# Phân tích thống kê (mô hình hỗn hợp cho H2b)
+# ARIMA có biến ngoại sinh (SARIMAX) và mô hình hỗn hợp
 statsmodels>=0.13
 
 # Tinh chỉnh siêu tham số (tùy chọn)

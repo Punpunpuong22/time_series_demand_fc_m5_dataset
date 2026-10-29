@@ -1,0 +1,30 @@
+# Cấu hình chung cho mọi thí nghiệm.
+# Mọi chỉ số ngày dùng chỉ số d của M5 (d_1 = 29/01/2011, d_1941 = 22/05/2016).
+
+paths:
+  raw_dir: data/raw          # chứa calendar.csv, sell_prices.csv, sales_train_evaluation.csv
+  out_dir: results           # nơi ghi dự báo và độ đo
+
+data:
+  n_series: 3000             # số chuỗi lấy mẫu phân tầng; null = dùng toàn bộ 30,490 chuỗi
+  sample_seed: 2026
+  stratify_by: [store_id, cat_id, demand_class]
+  classify_until_d: 1521     # ADI/CV² chỉ tính trên dữ liệu huấn luyện ban đầu (tránh rò rỉ)
+  history_days: 1095         # số ngày gần nhất trước mốc dùng làm dòng huấn luyện cho LightGBM
+
+windows:
+  horizon: 28
+  first_tune_start: 1522     # 2 cửa sổ tinh chỉnh: d_1522–d_1549, d_1550–d_1577
+  n_tune: 2
+  first_eval_start: 1578     # 13 cửa sổ đánh giá: d_1578–d_1941 (cửa sổ cuối = kiểm tra cuối)
+  n_eval: 13
+  retrain_every: 3           # huấn luyện lại sau mỗi 3 cửa sổ
+
+daytypes:
+  pre_event_days: 3          # 1–3 ngày trước sự kiện được gán nhãn "pre_event"
+
+inventory:
+  lead_time: 2               # ngày
+  service_z: 1.645           # tồn an toàn ứng với mức phục vụ mục tiêu ~95%
+
+seeds: [1, 2, 3, 4, 5]
