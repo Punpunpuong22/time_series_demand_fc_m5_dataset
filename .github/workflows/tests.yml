@@ -1,0 +1,23 @@
+# Tự động chạy bộ kiểm thử (gồm kiểm thử chống rò rỉ) mỗi khi bạn push lên GitHub.
+# Kết quả xem ở tab "Actions" của repo. Dấu tích xanh = mọi kiểm thử đạt.
+name: tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Cài thư viện (không cài PyTorch để chạy nhanh; kiểm thử LSTM sẽ được bỏ qua)
+        run: |
+          python -m pip install --upgrade pip
+          pip install numpy pandas scipy pyyaml pytest lightgbm
+          pip install -e .
+      - name: Chạy kiểm thử
+        run: python -m pytest -q

@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+message: "Nếu bạn sử dụng mã nguồn này, vui lòng trích dẫn như sau."
+title: "m5-calendar-forecasting: Impact of calendar and event factors on retail demand forecasting across machine-learning model families"
+authors:
+  - family-names: "[Họ]"
+    given-names: "[Tên]"
+    affiliation: "University of Information Technology, VNU-HCM"
+version: 0.3.0
+date-released: 2026-10-25
+license: MIT
+repository-code: "https://github.com/Punpunpuong22/time_series_demand_fc_m5_dataset"

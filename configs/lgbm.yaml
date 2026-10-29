@@ -1,0 +1,27 @@
+# Siêu tham số mặc định của LightGBM (điểm xuất phát; tinh chỉnh bằng --tune).
+params:
+  objective: tweedie
+  tweedie_variance_power: 1.1
+  learning_rate: 0.05
+  num_leaves: 127
+  min_data_in_leaf: 100
+  feature_fraction: 0.8
+  bagging_fraction: 0.8
+  bagging_freq: 1
+  lambda_l2: 0.1
+  max_bin: 255
+  verbose: -1
+  num_threads: 0             # 0 = dùng mọi lõi CPU
+
+num_boost_round: 2000
+early_stopping_rounds: 100
+
+# Không gian tìm kiếm cho Optuna (cùng ngân sách với LSTM để so sánh công bằng)
+tuning:
+  n_trials: 30
+  space:
+    learning_rate: [0.02, 0.1, log]
+    num_leaves: [31, 255, int]
+    min_data_in_leaf: [20, 300, int]
+    feature_fraction: [0.5, 1.0, float]
+    tweedie_variance_power: [1.05, 1.5, float]
