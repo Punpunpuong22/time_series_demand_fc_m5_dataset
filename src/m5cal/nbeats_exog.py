@@ -13,7 +13,7 @@ import pandas as pd
 
 DEFAULT_PARAMS = dict(input_size=28, mlp_width=256, max_steps=1000, val_check_steps=50,
                       early_stop_patience_steps=5, batch_size=32, windows_batch_size=1024,
-                      learning_rate=1e-3, scaler_type="standard")
+                      learning_rate=1e-3, scaler_type="standard", accelerator="auto")
 
 
 def build_nf_frame(df: pd.DataFrame, exog_cols, id_col: str = "item_id", date_col: str = "date",
@@ -49,7 +49,7 @@ def nbeatsx_cross_validation(df_nf: pd.DataFrame, exog_cols, test_size: int, val
                       early_stop_patience_steps=p["early_stop_patience_steps"], batch_size=p["batch_size"],
                       windows_batch_size=p["windows_batch_size"], learning_rate=p["learning_rate"],
                       scaler_type=p["scaler_type"], random_seed=seed, start_padding_enabled=True,
-                      enable_progress_bar=False)
+                      enable_progress_bar=False, accelerator=p["accelerator"])
     nf = nf_cls(models=[model], freq="D")
     cv = nf.cross_validation(df=df_nf, n_windows=None, test_size=test_size, val_size=val_size,
                              step_size=1, refit=False)
