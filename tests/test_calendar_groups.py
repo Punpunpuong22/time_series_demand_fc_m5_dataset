@@ -168,6 +168,17 @@ def test_nbeatsx_pipeline_with_fake_library():
     none = nbeatsx_cross_validation(nf_df, [], 10, 10, nf_cls=FakeNF, model_cls=FakeNBEATSx, loss="mse")
     assert FakeNF.last.models[0].kw["futr_exog_list"] is None and len(none) == 20
 
+    # thiếu ít dòng: điền bằng mô hình cơ sở; thiếu nhiều dòng: vẫn báo lỗi
+    test_eval["MA28"] = 99.0
+    filled = attach(test_eval, preds.iloc[:-1], "N-BEATS-S2", fallback_col="MA28", max_missing=0.1)
+    assert filled["N-BEATS-S2"].iloc[-1] == 99.0 and filled.attrs["filled"]["N-BEATS-S2"] == 1
+    with pytest.raises(ValueError):
+        attach(test_eval, preds.iloc[:5], "N-BEATS-S2", fallback_col="MA28", max_missing=0.1)
+    # chuỗi quá ngắn bị bỏ trước khi gọi cross_validation
+    short = nf_df[~((nf_df["unique_id"] == nf_df["unique_id"].iloc[0]) & (nf_df["ds"] < nf_df["ds"].max() - pd.Timedelta(days=15)))]
+    part = nbeatsx_cross_validation(short, ["ev"], 10, 10, nf_cls=FakeNF, model_cls=FakeNBEATSx, loss="mse")
+    assert part["unique_id"].nunique() == nf_df["unique_id"].nunique() - 1
+
 
 # ---------------------------------------------------------------- bảng tác động
 def test_group_effects_signs_and_relevant_days():

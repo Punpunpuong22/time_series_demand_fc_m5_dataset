@@ -96,6 +96,18 @@ time_series_demand_fc_m5_dataset/
 
 Thời gian ước tính trên T4: ARIMA 20–60 phút (CPU, song song), LightGBM vài phút, LSTM 1–2 giờ, N-BEATS 30–60 phút.
 
+**Khi gặp lỗi**
+
+| Hiện tượng | Cách xử lý |
+| --- | --- |
+| `FileNotFoundError: Không tìm thấy calendar.csv…` | Notebook tìm dữ liệu ở `/content/M5_Data`, `MyDrive/M5_Data` rồi mới tải bằng kagglehub. Tải 3 tệp `calendar.csv`, `sales_train_evaluation.csv`, `sell_prices.csv` vào `/content/M5_Data`, hoặc đặt `DATA_DIR` ở ô cấu hình. |
+| kagglehub báo lỗi đăng nhập (401/403) | Colab → biểu tượng chìa khóa (Secrets) → thêm `KAGGLE_USERNAME`, `KAGGLE_KEY` (Kaggle → Settings → API → Create New Token). Không dán khóa vào mã. |
+| Một mô hình báo `!!! … lỗi, bỏ qua` | Notebook vẫn chạy tiếp các mô hình khác; lỗi được ghi vào `v4_failed.csv`. Gửi traceback in ra ở ô đó để sửa, hoặc tắt mô hình đó trong `RUN`. |
+| `… dòng không có dự báo, điền bằng MA28` | Mặt hàng lên kệ quá muộn để ước lượng ARIMA hoặc N-BEATS; dòng thiếu (tối đa 5%) được điền bằng mô hình cơ sở MA28 và ghi vào `v4_filled_rows.csv`. |
+| Sau khi cài `neuralforecast`, Colab báo phải khởi động lại | Runtime → Restart session, rồi Run all lại; các mô hình đã xong được đọc lại từ `PRED_DIR`. |
+
+Khi chạy xong, ô cuối tạo `v4_results.zip` (các bảng `v4_*.csv` và hình) và tự tải về máy.
+
 ## 4. Khung mở rộng: chạy trên Google Colab
 
 1. Đưa repo lên GitHub theo [docs/HUONG_DAN_GIT.md](docs/HUONG_DAN_GIT.md).

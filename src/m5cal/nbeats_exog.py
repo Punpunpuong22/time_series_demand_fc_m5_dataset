@@ -35,6 +35,13 @@ def nbeatsx_cross_validation(df_nf: pd.DataFrame, exog_cols, test_size: int, val
         from neuralforecast.models import NBEATSx
         nf_cls, model_cls, loss = nf_cls or NeuralForecast, model_cls or NBEATSx, loss or MSE()
     exog_cols = list(exog_cols)
+    # Chuỗi quá ngắn (mặt hàng lên kệ muộn) làm cross_validation báo lỗi: bỏ ra, dòng kiểm tra của chúng
+    # được điền bằng mô hình cơ sở khi ghép (xem `attach`).
+    lengths = df_nf.groupby("unique_id")["ds"].transform("size")
+    short = lengths < test_size + val_size + 1
+    if short.any():
+        print(f"  NBEATSx: bỏ {df_nf.loc[short, 'unique_id'].nunique()} chuỗi ngắn hơn {test_size + val_size + 1} ngày")
+        df_nf = df_nf[~short]
     model = model_cls(h=1, input_size=p["input_size"], futr_exog_list=exog_cols or None,
                       stack_types=["identity", "identity", "identity"], n_blocks=[1, 1, 1],
                       mlp_units=3 * [[p["mlp_width"], p["mlp_width"]]], loss=loss,
@@ -52,12 +59,25 @@ def nbeatsx_cross_validation(df_nf: pd.DataFrame, exog_cols, test_size: int, val
 
 
 def attach(test_eval: pd.DataFrame, preds: pd.DataFrame, col: str, id_col: str = "item_id",
-           date_col: str = "date") -> pd.DataFrame:
-    """Ghép dự báo vào khung đánh giá theo (mặt hàng, ngày); báo lỗi nếu thiếu dòng."""
+           date_col: str = "date", fallback_col: str | None = None, max_missing: float = 0.05) -> pd.DataFrame:
+    """Ghép dự báo vào khung đánh giá theo (mặt hàng, ngày).
+
+    Dòng thiếu dự báo (ví dụ mặt hàng lên kệ quá muộn để ước lượng mô hình) được điền bằng cột
+    `fallback_col` (mô hình cơ sở) nếu tỉ lệ thiếu không vượt `max_missing`; ngược lại báo lỗi.
+    Số dòng đã điền được lưu trong `out.attrs["filled"]`.
+    """
     p = preds.rename(columns={"unique_id": id_col, "ds": date_col, "pred": col})
     p[date_col] = pd.to_datetime(p[date_col]).astype("datetime64[ns]")
+    p = p.drop_duplicates([id_col, date_col])
     out = test_eval.drop(columns=[col], errors="ignore").merge(p[[id_col, date_col, col]], on=[id_col, date_col], how="left")
-    if out[col].isna().any():
-        raise ValueError(f"{col}: thiếu dự báo cho {int(out[col].isna().sum())} dòng kiểm tra")
+    missing = int(out[col].isna().sum())
+    if missing:
+        frac = missing / len(out)
+        if fallback_col is None or fallback_col not in out.columns or frac > max_missing:
+            raise ValueError(f"{col}: thiếu dự báo cho {missing} dòng kiểm tra ({100 * frac:.1f}%)")
+        print(f"  {col}: {missing} dòng ({100 * frac:.2f}%) không có dự báo, điền bằng {fallback_col}")
+        out[col] = out[col].fillna(out[fallback_col])
     out[col] = out[col].clip(lower=0)
+    out.attrs = dict(getattr(test_eval, "attrs", {}) or {})
+    out.attrs.setdefault("filled", {})[col] = missing
     return out
