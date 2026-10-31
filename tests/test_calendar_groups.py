@@ -160,6 +160,7 @@ def test_nbeatsx_pipeline_with_fake_library():
                                      nf_cls=FakeNF, model_cls=FakeNBEATSx, loss="mse")
     kw = FakeNF.last.models[0].kw
     assert kw["h"] == 1 and kw["futr_exog_list"] == ["ev"] and kw["random_seed"] == 7 and kw["input_size"] == 14
+    assert kw["accelerator"] == "auto"
     test_eval = df[df["date"] > dates[39]][["item_id", "date", "demand"]].reset_index(drop=True)
     out = attach(test_eval, preds, "N-BEATS-S2")
     np.testing.assert_allclose(out["N-BEATS-S2"], out["demand"] - 1)
